@@ -13,26 +13,48 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @SpringBootApplication
 public class Application {
-	static Logger logger = LoggerFactory.getLogger("log");
-
+	static Logger log = LoggerFactory.getLogger("log");
+	
 	public static void main(String[] args) {
 		ApplicationContext ctx = SpringApplication.run(Application.class, args);
-
 		Controller controller = ctx.getBean(Controller.class);
 		controller.execute();
-		logger.info("finish");
+		log.info("finish");
 	}
 
+/*	@Bean
+	@Primary
+	public DataSource dataSourceTest() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+		dataSource.setUrl("jdbc:oracle:thin:@10.101.107.41:1521:orcltest");
+		dataSource.setUsername("system");
+		dataSource.setPassword("oracle");
+		return dataSource;
+	}*/
+	
 	@Bean
 	@Primary
 	public DataSource dataSourceTest() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-		dataSource.setUrl("jdbc:oracle:thin:@10.25.79.176:1521:orcl");
+		dataSource.setUrl("jdbc:oracle:thin:@10.101.107.30:1521:orcl");
+		dataSource.setUsername("system");
+		dataSource.setPassword("oracle");
+		return dataSource;
+	}
+	
+/*	@Bean
+	@Primary
+	public DataSource dataSourceTest() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+		dataSource.setUrl("jdbc:oracle:thin:@10.101.107.6:1521:orcl");
 		dataSource.setUsername("system");
 		dataSource.setPassword("Baosight123");
 		return dataSource;
 	}
+	*/
 	
 	@Bean
 	public DataSource dataSourceRelease() {
