@@ -1,11 +1,9 @@
 package solution;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 
 public class Solution {
 
@@ -57,6 +55,51 @@ public class Solution {
 	}
 
 	/**
+	 * 31. Next Permutation
+	 * 
+	 * @param nums
+	 */
+	
+	/*
+	 * Implement next permutation, which rearranges numbers into the
+	 * lexicographically next greater permutation of numbers.
+	 * 
+	 * If such arrangement is not possible, it must rearrange it as the lowest
+	 * possible order (ie, sorted in ascending order).
+	 * 
+	 * The replacement must be in-place, do not allocate extra memory.
+	 * 
+	 * Here are some examples. Inputs are in the left-hand column and its
+	 * corresponding outputs are in the right-hand column. 1,2,3 ¡ú 1,3,2 3,2,1 ¡ú
+	 * 1,2,3 1,1,5 ¡ú 1,5,1
+	 */
+	
+	public void nextPermutation(int[] nums) {
+		if (nums == null || nums.length == 1)
+			return;
+		if (isMax(nums))
+			reverse(nums);
+		
+	}
+	
+	private void reverse(int [] nums) {
+		int [] result = new int[nums.length];
+		for (int i = nums.length - 1, j=0; i >=0; --i, j++) {
+			result[j] = nums[i];
+		}
+	}
+	
+	public boolean isMax(int [] num) {
+		if (num.length == 0)
+			return true;
+		for (int i = 1; i < num.length; ++i) {
+			if (num[i - 1] - num[i] < 0)
+				return false;
+		}
+		return true;
+	}
+
+	/**
 	 * 35st,Search Insert Position
 	 * 
 	 * @param nums
@@ -73,6 +116,60 @@ public class Solution {
 	}
 
 	/**
+	 * 46. Permutations
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public List<List<Integer>> permute(int[] nums) {
+		List<List<Integer>> list = new ArrayList<>();
+		premute(nums.length, nums, new ArrayList<>(), list);
+		return list;
+	}
+
+	public void premute(int size, int[] nums, List<Integer> element, List<List<Integer>> result) {
+		if (element.size() == size) {
+			result.add(element);
+			return;
+		}
+
+		for (int i = 0; i < nums.length; ++i) {
+			if (!element.contains(nums[i])) {
+				List<Integer> tmp = new ArrayList<>(element);
+				tmp.add(nums[i]);
+				premute(size, nums, tmp, result);
+			}
+		}
+	}
+
+	/**
+	 * 62. Unique Paths
+	 * 
+	 * @param m
+	 * @param n
+	 * @return
+	 */
+	public int uniquePaths(int m, int n) {
+		int[][] dp = new int[m][n];
+
+		for (int i = 0; i < dp.length; ++i) {
+			dp[i][0] = 1;
+		}
+
+		for (int i = 0; i < dp[0].length; ++i) {
+			dp[0][i] = 1;
+		}
+
+		for (int i = 1; i < m; ++i) {
+			for (int j = 1; j < n; ++j) {
+				dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+			}
+		}
+
+		return dp[m - 1][n - 1];
+	}
+
+	/**
 	 * 77st,Combinations
 	 * 
 	 * @param n
@@ -81,6 +178,18 @@ public class Solution {
 	 */
 	/*
 	 * public List<List<Integer>> combine(int n, int k) {
+	 * 
+	 * }
+	 */
+
+	/**
+	 * 89. Gray Code
+	 * 
+	 * @param n
+	 * @return
+	 */
+	/*
+	 * public List<Integer> grayCode(int n) {
 	 * 
 	 * }
 	 */
@@ -322,6 +431,16 @@ public class Solution {
 	}
 
 	/**
+	 * 309. Best Time to Buy and Sell Stock with Cooldown
+	 * 
+	 * @param prices
+	 * @return
+	 */
+	public int maxProfit2(int[] prices) {
+		return 1;
+	}
+
+	/**
 	 * 318. Maximum Product of Word Lengths
 	 * 
 	 * @param words
@@ -341,12 +460,85 @@ public class Solution {
 		for (int i = 0; i < words.length; ++i) {
 			for (int j = i + 1; j < words.length; ++j) {
 				if ((bitChecker[i] & bitChecker[j]) == 0) {
-					max = max > words[i].length() * words[j].length() ? max
-							: words[i].length() * words[j].length();
+					max = max > words[i].length() * words[j].length() ? max : words[i].length() * words[j].length();
 				}
 			}
 		}
 		return max;
+	}
+
+	/**
+	 * 319. Bulb Switcher
+	 * 
+	 * @param n
+	 * @return
+	 */
+	public int bulbSwitch(int n) {
+		if (n == 1 || n == 0)
+			return n;
+
+		boolean[] result = new boolean[n];
+		for (int i = 0; i < n; ++i)
+			result[i] = false;
+
+		for (int i = 1; i <= n; ++i) {
+			for (int j = 1; j <= n; ++j) {
+				if (j % i == 0)
+					result[j - 1] = result[j - 1] ? false : true;
+			}
+		}
+
+		int count = 0;
+		for (boolean b : result) {
+			if (b)
+				count++;
+		}
+
+		return count;
+	}
+
+	/**
+	 * 322. Coin Change
+	 * 
+	 * @param coins
+	 * @param amount
+	 * @return
+	 */
+	public int coinChange(int[] coins, int amount) {
+		if (amount == 0)
+			return 0;
+
+		int max = Integer.MIN_VALUE;
+		for (int c : coins)
+			max = max > c ? max : c;
+
+		int size = amount > max ? amount : max;
+		int[] dp = new int[size + 1];
+
+		for (int i = 0; i <= size; ++i) {
+			dp[i] = -1;
+		}
+		for (int coin : coins) {
+			dp[coin] = 1;
+		}
+		for (int i = 1; i <= amount; ++i) {
+			int min = Integer.MAX_VALUE;
+			for (int c : coins) {
+				if (c == i) {
+					min = 0;
+					break;
+				}
+
+				if (i - c < 0 || dp[i - c] == -1)
+					continue;
+
+				min = min > dp[i - c] ? dp[i - c] : min;
+			}
+			if (min != Integer.MAX_VALUE)
+				dp[i] = min + 1;
+		}
+
+		return dp[amount];
 	}
 
 	class UndirectedGraphNode {
