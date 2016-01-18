@@ -59,7 +59,7 @@ public class Solution {
 	 * 
 	 * @param nums
 	 */
-	
+
 	/*
 	 * Implement next permutation, which rearranges numbers into the
 	 * lexicographically next greater permutation of numbers.
@@ -73,23 +73,23 @@ public class Solution {
 	 * corresponding outputs are in the right-hand column. 1,2,3 ¡ú 1,3,2 3,2,1 ¡ú
 	 * 1,2,3 1,1,5 ¡ú 1,5,1
 	 */
-	
+
 	public void nextPermutation(int[] nums) {
 		if (nums == null || nums.length == 1)
 			return;
 		if (isMax(nums))
 			reverse(nums);
-		
+
 	}
-	
-	private void reverse(int [] nums) {
-		int [] result = new int[nums.length];
-		for (int i = nums.length - 1, j=0; i >=0; --i, j++) {
+
+	private void reverse(int[] nums) {
+		int[] result = new int[nums.length];
+		for (int i = nums.length - 1, j = 0; i >= 0; --i, j++) {
 			result[j] = nums[i];
 		}
 	}
-	
-	public boolean isMax(int [] num) {
+
+	public boolean isMax(int[] num) {
 		if (num.length == 0)
 			return true;
 		for (int i = 1; i < num.length; ++i) {
@@ -167,6 +167,74 @@ public class Solution {
 		}
 
 		return dp[m - 1][n - 1];
+	}
+
+	/**
+	 * 64. Minimum Path Sum
+	 * 
+	 * Given a m x n grid filled with non-negative numbers, find a path from top
+	 * left to bottom right which minimizes the sum of all numbers along its
+	 * path.
+	 * 
+	 * Note: You can only move either down or right at any point in time.
+	 * 
+	 * @param grid
+	 * @return
+	 */
+	public int minPathSum(int[][] grid) {
+		if (grid == null || grid.length == 0)
+			return 0;
+		int[][] result = new int[grid.length][grid[0].length];
+		result[0][0] = grid[0][0];
+		return minPathSum(grid, grid.length - 1, grid[0].length - 1, result);
+	}
+
+	private int minPathSum(int[][] grid, int x, int y, int[][] result) {
+		if (x == 0 && y == 0)
+			return grid[x][y];
+		if (result[x][y] != 0)
+			return result[x][y];
+		if (x == 0) {
+			int path =  minPathSum(grid, x, y - 1, result) + grid[x][y];
+			result[x][y] = path;
+			return path;
+		}
+		if (y == 0) {
+			int path = minPathSum(grid, x - 1, y, result) + grid[x][y];
+			result[x][y] = path;
+			return path;
+		}
+
+		int path = Math.min(minPathSum(grid, x - 1, y, result), minPathSum(grid, x, y - 1, result)) + grid[x][y];
+		result[x][y] = path;
+		return path;
+	}
+
+	/**
+	 * 75. Sort Colors
+	 * 
+	 * @param nums
+	 *            Given an array with n objects colored red, white or blue, sort
+	 *            them so that objects of the same color are adjacent, with the
+	 *            colors in the order red, white and blue.
+	 * 
+	 *            Here, we will use the integers 0, 1, and 2 to represent the
+	 *            color red, white, and blue respectively.
+	 */
+	public void sortColors(int[] nums) {
+		if (nums == null || nums.length == 0)
+			return;
+		int[] colors = { 0, 1, 2 };
+		int[] sorted = new int[nums.length];
+		int count = 0;
+		for (int c : colors) {
+			for (int e : nums) {
+				if (e == c) {
+					sorted[count++] = e;
+				}
+			}
+		}
+		System.arraycopy(sorted, 0, nums, 0, nums.length);
 	}
 
 	/**
