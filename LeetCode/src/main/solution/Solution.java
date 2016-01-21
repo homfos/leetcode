@@ -195,7 +195,7 @@ public class Solution {
 		if (result[x][y] != 0)
 			return result[x][y];
 		if (x == 0) {
-			int path =  minPathSum(grid, x, y - 1, result) + grid[x][y];
+			int path = minPathSum(grid, x, y - 1, result) + grid[x][y];
 			result[x][y] = path;
 			return path;
 		}
@@ -607,6 +607,138 @@ public class Solution {
 		}
 
 		return dp[amount];
+	}
+
+	/**
+	 * 326. Power of Three
+	 * 
+	 * Given an integer, write a function to determine if it is a power of
+	 * three.
+	 * 
+	 * Follow up:
+	 * 
+	 * Could you do it without using any loop / recursion?
+	 * 
+	 * @param n
+	 * @return
+	 */
+	public boolean isPowerOfThree(int n) {
+		if (n == 1)
+			return true;
+		if (n < 3)
+			return false;
+		int power = 3;
+		while (power < n && power > 0) {
+			power *= 3;
+		}
+		if (power == n)
+			return true;
+		else
+			return false;
+	}
+
+	/*
+	 * 328. Odd Even Linked List
+	 * 
+	 * Given a singly linked list, group all odd nodes together followed by the
+	 * even nodes. Please note here we are talking about the node number and not
+	 * the value in the nodes.
+	 * 
+	 * You should try to do it in place. The program should run in O(1) space
+	 * complexity and O(nodes) time complexity.
+	 * 
+	 * Example:
+	 * 
+	 * Given 1->2->3->4->5->NULL,
+	 * 
+	 * return 1->3->5->2->4->NULL.
+	 */
+
+	/**
+	 * @param head
+	 * @return
+	 */
+	public ListNode oddEvenList(ListNode head) {
+		if (head == null || head.next == null || head.next.next == null)
+			return head;
+		ListNode odd = head, oddCurrent = head, evenCurrent = head.next, even = evenCurrent, current = evenCurrent.next;
+		int i = 1;
+		while (current != null) {
+			if (i % 2 == 1) {
+				oddCurrent.next = current;
+				oddCurrent = oddCurrent.next;
+			} else {
+				evenCurrent.next = current;
+				evenCurrent = evenCurrent.next;
+			}
+			i++;
+			current = current.next;
+		}
+		evenCurrent.next = null;
+		oddCurrent.next = even;
+		return odd;
+	}
+
+	/*
+	 * 329. Longest Increasing Path in a Matrix
+	 * 
+	 * Given an integer matrix, find the length of the longest increasing path.
+	 * 
+	 * From each cell, you can either move to four directions: left, right, up
+	 * or down. You may NOT move diagonally or move outside of the boundary
+	 * (i.e. wrap-around is not allowed).
+	 * 
+	 * Example 1:
+	 * 
+	 * nums = [ [9,9,4],
+	 * 
+	 * [6,6,8],
+	 * 
+	 * [2,1,1] ]
+	 * 
+	 * Return 4
+	 * 
+	 * The longest increasing path is [1, 2, 6, 9].
+	 * 
+	 * Example 2:
+	 * 
+	 * nums = [ [3,4,5],
+	 * 
+	 * [3,2,6],
+	 * 
+	 * [2,2,1] ]
+	 * 
+	 * Return 4
+	 * 
+	 * The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not
+	 * allowed.
+	 */
+	final static int[] nx = { -1, 1, 0, 0 };
+	final static int[] ny = { 0, 0, 1, -1 };
+
+	public int longestIncreasingPath(int[][] matrix) {
+		if (matrix == null || matrix.length == 0)
+			return 0;
+		int [][] result = new int[matrix.length][matrix[0].length];
+		int max = 0;
+		for (int i = 0; i < matrix.length; ++i) {
+			for (int j = 0; j < matrix[0].length; ++j) {
+				int current = dfs(matrix, i, j, result);
+				max = current > max ? current : max;
+			}
+		}
+		return max;
+	}
+
+	public int dfs(int[][] matrix, int x, int y, int[][] result) {
+		if (result[x][y] != 0)
+			return result[x][y];
+		for (int i = 0; i < 4; ++i) {
+			if (x + nx[i] >= 0 && y + ny[i] >= 0 && x + nx[i] < matrix.length && y + ny[i] < matrix[0].length
+					&& matrix[x + nx[i]][y + ny[i]] > matrix[x][y])
+				result[x][y] = Math.max(result[x][y], dfs(matrix, x + nx[i], y + ny[i], result));
+		}
+		return ++result[x][y];
 	}
 
 	class UndirectedGraphNode {
